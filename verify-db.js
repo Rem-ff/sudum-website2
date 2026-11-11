@@ -1,1 +1,1 @@
-console.log('Static site ready')\n
+console.log('Static site ready')
