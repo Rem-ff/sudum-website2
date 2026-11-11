@@ -1,1 +1,4 @@
-{"buildCommand":"echo Static site ready","installCommand":"echo No dependencies","outputDirectory":"public"}\n
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public"
+}
