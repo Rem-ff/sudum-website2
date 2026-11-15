@@ -69,6 +69,9 @@ nav.site-nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);width:m
 .milestone-future:after{background:linear-gradient(0deg,rgba(12,10,19,.8),transparent 65%)}
 .gallery-toggle{padding:8px 0;min-height:44px}
 .lang-en .milestone-card{direction:ltr}
+
+/* Preserve brand colors without desktop image desaturation or excessive dimming. */
+@media(min-width:901px){.hero .brand-haze{opacity:1}.about .brand-haze{opacity:.44}.milestones .brand-haze{opacity:.34}.approach .brand-haze{opacity:.34}.contact-pane:before{opacity:.36}.milestone-card img,.milestone-card:hover img{filter:none}.section-copy{color:#d6cde0}.offer-card p{color:#c9bdd7}.principle p{color:#cbbfdc}}
 </style>
 </head>
 <body>
@@ -170,10 +173,6 @@ function makeCard(it,clone=false){
 }
 for(let k=0;k<3;k++)items.forEach(it=>track.appendChild(makeCard(it,k>0)));
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;let last=0,position=0,paused=false,manualUntil=0;
-const pause=document.createElement('button');pause.type='button';pause.className='pause-btn gallery-toggle';pause.textContent='إيقاف الحركة';pause.setAttribute('aria-pressed','false');
-const below=document.createElement('div');below.className='gallery-bottom';below.appendChild(pause);viewport.parentElement.appendChild(below);
-function pauseLabel(){pause.textContent=document.documentElement.lang==='en'?(paused?'Play slideshow':'Pause slideshow'):(paused?'تشغيل الحركة':'إيقاف الحركة');pause.setAttribute('aria-pressed',String(paused));}
-pause.addEventListener('click',()=>{paused=!paused;pauseLabel();});
 viewport.addEventListener('pointerdown',()=>{manualUntil=performance.now()+7000;});
 viewport.addEventListener('wheel',()=>{manualUntil=performance.now()+7000;},{passive:true});
 viewport.addEventListener('focusin',()=>{manualUntil=Infinity;});
@@ -184,7 +183,7 @@ function tick(t){if(!last)last=t;const dt=Math.min(40,t-last);last=t;
 }requestAnimationFrame(tick);
 
 const navLinks=document.getElementById('navLinks'),mobile=document.getElementById('mobileMenu');mobile.addEventListener('click',()=>{const o=navLinks.classList.toggle('open');mobile.setAttribute('aria-expanded',String(o));mobile.textContent=o?'×':'☰'});navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{navLinks.classList.remove('open');mobile.setAttribute('aria-expanded','false');mobile.textContent='☰'}));
-let en=false;document.getElementById('language').addEventListener('click',()=>{en=!en;document.documentElement.lang=en?'en':'ar';document.documentElement.dir=en?'ltr':'rtl';document.body.classList.toggle('lang-en',en);document.querySelectorAll('[data-ar][data-en]:not(.milestone-card)').forEach(el=>el.textContent=en?el.dataset.en:el.dataset.ar);track.querySelectorAll('.milestone-card').forEach(el=>{el.querySelector('strong').textContent=en?el.dataset.en:el.dataset.ar;});track.querySelectorAll('img').forEach(im=>{im.alt=en?im.dataset.altEn:im.dataset.altAr;});pauseLabel();document.getElementById('language').textContent=en?'العربية':'EN';});
+let en=false;document.getElementById('language').addEventListener('click',()=>{en=!en;document.documentElement.lang=en?'en':'ar';document.documentElement.dir=en?'ltr':'rtl';document.body.classList.toggle('lang-en',en);document.querySelectorAll('[data-ar][data-en]:not(.milestone-card)').forEach(el=>el.textContent=en?el.dataset.en:el.dataset.ar);track.querySelectorAll('.milestone-card').forEach(el=>{el.querySelector('strong').textContent=en?el.dataset.en:el.dataset.ar;});track.querySelectorAll('img').forEach(im=>{im.alt=en?im.dataset.altEn:im.dataset.altAr;});document.getElementById('language').textContent=en?'العربية':'EN';});
 if('IntersectionObserver'in window){const ob=new IntersectionObserver(es=>{es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');ob.unobserve(x.target)}})},{threshold:.06,rootMargin:'0px 0px 20px 0px'});document.querySelectorAll('.reveal').forEach(el=>ob.observe(el));}else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
 document.getElementById('year').textContent=new Date().getFullYear();
 })();
